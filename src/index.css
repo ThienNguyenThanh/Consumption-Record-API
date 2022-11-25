@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#table-header {
+  position: sticky;
+  top:0;
+  z-index:1;
+}
+
+.table tbody .data-row:nth-of-type(odd) {
+  background-color: #FFFAFA;
+}
+.table tbody .data-row:nth-of-type(even) {
+  background-color: #F5F5F5;
+}
+
+.table tbody .data-row:hover {
+  background-color: #f0e608;
+}
