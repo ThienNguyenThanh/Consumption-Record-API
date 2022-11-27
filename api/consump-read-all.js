@@ -29,5 +29,5 @@ router.get('/', async (req, res) => {
 app.use(cors())
 app.use('/.netlify/functions/consump-read-all', router)
 
-module.exports = app
+// module.exports = app
 module.exports.handler = serverless(app)
