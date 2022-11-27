@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express()
 const serverless = require('serverless-http')
+const cors = require('cors')
 require('dotenv').config()
 
 const faunadb = require('faunadb')
@@ -10,49 +11,22 @@ const router = express.Router()
 
 const {
     Paginate,
-    Get,
-    Select,
     Match,
-    Index,
-    Create,
-    Collection,
-    Lambda,
-    Var,
-    Join,
-    Ref,
-    Documents
+    Index
+    
 } = faunadb.query
-
-
-// app.get('/rooms/:id', async (req,res) =>{
-//     const doc = await client.query(
-//         Get(
-//             Ref(
-//                 Collection('DemoRooms'),
-//                 req.params.id
-//             )
-//         )
-//     )
-
-
-//     res.send(doc)
-// });
 
 router.get('/', async (req, res) => {
     const doc = await client.query(
-        Paginate(
-            
-            Match(Index("test"))
-            // Index(("all_consumptions")),
-            // {size: 3}
-            
+        Paginate(  
+            Match(Index("monthly-consumptions"), ["9","2022"])
         )
+        
     )
-
-
     res.send(doc.data)
 })
 
+app.use(cors())
 app.use('/.netlify/functions/consump-read-all', router)
 
 module.exports = app

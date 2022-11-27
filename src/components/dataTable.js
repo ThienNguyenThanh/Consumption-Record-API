@@ -1,4 +1,4 @@
-// import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useState} from 'react';
 
 function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
   return(
@@ -6,9 +6,9 @@ function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
     <tr>
       <th scope="row" rowSpan="2" class="room-id">{roomId}</th>
       <td>Cũ: {oldElec}</td>
-      <td>Cũ: <i class={oldElec0} ></i></td>
+      <td>Cũ: <i class={oldElec0 == 1 ? "bx bxs-check-square" : "bx bxs-x-square"} ></i></td>
       <td>Cũ: {oldWater}</td>
-      <td>Cũ: <i class={oldWater0} ></i></td>
+      <td>Cũ: <i class={oldWater0 == 1 ? "bx bxs-check-square" : "bx bxs-x-square"} ></i></td>
     </tr>
     <tr>
       <td>
@@ -43,6 +43,14 @@ function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
 }
 
 function DataTable() {
+  const [consump, setConsump] = useState([])
+
+  useEffect(() => {
+     fetch('http://localhost:9000/.netlify/functions/consump-read-all')
+        .then(response => response.json())
+        .then(result => setConsump(result)) 
+  },[])
+
   return(
     <form>
       <table class="table table-bordered">
@@ -56,23 +64,10 @@ function DataTable() {
           </tr>
         </thead>
         <tbody class="table-content">
+          {consump.map(consum => (
+            <DataRow key={consum[4]} roomId={consum[4]} oldElec={consum[0]} oldElec0={consum[1]} oldWater={consum[2]} oldWater0={consum[3]} />
+          ))}
           
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          
-          
-
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"2"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"3"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"4"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"5"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"6"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
-          <DataRow roomId={"1"} oldElec={"1234"} oldElec0={"bx bxs-check-square"} oldWater={"1234"} oldWater0={"bx bxs-x-square"} />
         </tbody>
     </table>
     </form>

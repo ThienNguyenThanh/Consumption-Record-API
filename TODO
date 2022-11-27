@@ -1,3 +1,4 @@
 [] CRUD api
-[] Display all consumption
+[x] Display all consumption
 [] Edit consumption
+[] add month, year in api endpoint for indexes
