@@ -1,6 +1,6 @@
 [build]
     functions = "functions"
-    command = "npm i && npm run build:functions"
+    command = "npm i && npm run build:**"
     publish = "build"
 
 [template.environment]
