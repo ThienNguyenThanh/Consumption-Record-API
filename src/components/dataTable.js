@@ -1,4 +1,4 @@
-import {useRef, useEffect, useState} from 'react';
+import { useEffect, useState} from 'react';
 
 function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
   return(
@@ -6,9 +6,9 @@ function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
     <tr>
       <th scope="row" rowSpan="2" class="room-id">{roomId}</th>
       <td>Cũ: {oldElec}</td>
-      <td>Cũ: <i class={oldElec0 == 1 ? "bx bxs-check-square" : "bx bxs-x-square"} ></i></td>
+      <td>Cũ: <i class={oldElec0 === 1 ? "bx bxs-check-square" : "bx bxs-x-square"} ></i></td>
       <td>Cũ: {oldWater}</td>
-      <td>Cũ: <i class={oldWater0 == 1 ? "bx bxs-check-square" : "bx bxs-x-square"} ></i></td>
+      <td>Cũ: <i class={oldWater0 === 1 ? "bx bxs-check-square" : "bx bxs-x-square"} ></i></td>
     </tr>
     <tr>
       <td>
