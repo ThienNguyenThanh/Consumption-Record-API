@@ -47,7 +47,7 @@ function DataTable() {
 
   useEffect(() => {
      fetch('/.netlify/functions/consump-read-all')
-        .then(response => console.log(response.json()))
+        .then(response => response.json())
         .then(result => setConsump(result)) 
   },[])
 
