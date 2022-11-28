@@ -1,8 +1,5 @@
 [build]
-    command = "npm i && npm run build"
+    command = "npm run build"
     functions = "functions-build" 
     publish = "build"
-
-[template.environment]
-    FAUNA_SECRET_KEY="fnAE2N0mRFAAzx0IFbkwWego6Xmn6rsQXLMMVBrD"
     
