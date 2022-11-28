@@ -18,13 +18,18 @@ code {
   z-index:1;
 }
 
-.table tbody .data-row:nth-of-type(odd) {
+.table-content .room-id {
+  text-align: center;
+  vertical-align: middle;
+  background-color: LightGoldenRodYellow;
+}
+.table tbody tr:nth-of-type(even) {
   background-color: #FFFAFA;
 }
-.table tbody .data-row:nth-of-type(even) {
+.table tbody tr:nth-of-type(odd) {
   background-color: #F5F5F5;
 }
 
-.table tbody .data-row:hover {
-  background-color: #f0e608;
+.consumption-form .submit {
+  margin-bottom: 15px;
 }
