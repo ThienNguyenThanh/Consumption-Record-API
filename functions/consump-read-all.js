@@ -5,7 +5,7 @@
 // require('dotenv').config()
 
 const faunadb = require('faunadb')
-require('dotenv').config({ path: '/Users/thien/Desktop/Consumption-Record-API/.env.local' })
+// require('dotenv').config({ path: '/Users/thien/Desktop/Consumption-Record-API/.env.local' })
 const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 
 // const router = express.Router()
