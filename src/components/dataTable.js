@@ -45,10 +45,10 @@ function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
 function DataTable() {
   const [consump, setConsump] = useState([])
 
-  useEffect(() => {
+  useEffect(() =>  {
      fetch('/.netlify/functions/consump-read-all')
-        .then(response => response.json())
-        .then(result => setConsump(result)) 
+      .then(response => response.json())
+      .then(result => setConsump(result.data)) 
   },[])
 
   return(
