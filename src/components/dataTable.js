@@ -76,7 +76,7 @@ function DataTable() {
       })
 
       const consumption = await res.json();
-      console.log(consumption)
+      // console.log(consumption)
       if(consumption.after){
         // console.log(`After value: ${consumption.after}`)
         nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
@@ -98,8 +98,8 @@ function DataTable() {
       setErr(err.message)
     }finally{
       setIsLoading(false)
-      console.log(`Invoked next method`)
-    console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
+    //   console.log(`Invoked next method`)
+    // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
     }
   }
 
@@ -121,7 +121,7 @@ function DataTable() {
       })
 
       const consumption = await res.json();
-      console.log(consumption)
+      // console.log(consumption)
       if(consumption.after){
         // console.log(`After value: ${consumption.after}`)
         nextConsump.current = [consumption.after[0], consumption.after[1]["@ref"]["id"]]
@@ -142,8 +142,8 @@ function DataTable() {
       setErr(err.message)
     }finally{
       setIsLoading(false)
-      console.log(`Invoked prev method`)
-      console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
+      // console.log(`Invoked prev method`)
+      // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
     }
   }
 
@@ -162,7 +162,7 @@ function DataTable() {
       // console.log(consumption)
       if(consumption.after){
         // console.log(`After value: ${consumption.after}`)
-        nextConsump.current = [consumption.data[2][0], consumption.data[2][5]["@ref"]["id"]]
+        nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
       }
       
       setConsump(consumption.data)
@@ -172,8 +172,8 @@ function DataTable() {
       setErr(err.message)
     }finally{
       setIsLoading(false)
-      console.log(`Invoked fetch method`)
-      console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
+      // console.log(`Invoked fetch method`)
+      // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
     }
   }
 
