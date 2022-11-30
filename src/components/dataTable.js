@@ -48,6 +48,7 @@ function DataTable() {
   const [consump, setConsump] = useState([])
   const nextConsump = useRef([])
   const prevConsump  = useRef([])
+  const currentPage = useRef(0)
   const [isLoading, setIsLoading] = useState(false)
   const [err, setErr] = useState('')
   
@@ -92,7 +93,7 @@ function DataTable() {
         prevConsump.current = []
       }
       setConsump(consumption.data)
-      
+      currentPage.current += 1
     }
     catch(err){
       setErr(err.message)
@@ -136,7 +137,7 @@ function DataTable() {
         prevConsump.current = []
       }
       setConsump(consumption.data)
-      
+      currentPage.current -=1
     }
     catch(err){
       setErr(err.message)
@@ -166,14 +167,15 @@ function DataTable() {
       }
       
       setConsump(consumption.data)
+      currentPage.current = 1
       
     }
     catch(err){
       setErr(err.message)
     }finally{
       setIsLoading(false)
-      console.log(`Invoked fetch method`)
-      console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
+      // console.log(`Invoked fetch method`)
+      // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
     }
   }
 
@@ -181,8 +183,6 @@ function DataTable() {
   return(
     <>
     <button onClick={getAllConsump}>Fetch</button>
-    {prevConsump.current.length !== 0 && <button onClick={getPrevConump}>Prev</button> }
-    {nextConsump.current.length !== 0 && <button onClick={getNextConump}>After</button>}
 
     <form class="consumption-form">
       <table class="table table-bordered">
@@ -206,6 +206,9 @@ function DataTable() {
     </table>
     
     </form>
+    {prevConsump.current.length !== 0 && <button onClick={getPrevConump}>Prev</button> }
+    {currentPage.current !== 0 && <h5>Page {currentPage.current}</h5>}
+    {nextConsump.current.length !== 0 && <button onClick={getNextConump}>After</button>}
     
     
     </> 
