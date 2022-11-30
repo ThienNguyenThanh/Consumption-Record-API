@@ -13,7 +13,9 @@ const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 const {
     Paginate,
     Match,
-    Index
+    Index,
+    Ref,
+    Collection
     
 } = faunadb.query
 
@@ -34,9 +36,16 @@ const {
 // module.exports.handler = serverless(app)
 exports.handler = (event, context, callback) =>{
     // console.log("Funtion consumpt-read-all invoked")
+    const current_consump = event.body
+    console.log(current_consump)
     return client.query(
+    
         Paginate(  
-                Match(Index("monthly-consumptions"), ["9","2022"])
+                Match(Index("monthly-consumptions"), ["10","2022"]),
+                {   
+                    size: 3
+                    
+                }
         )
     ).then((response) => {
         return  {
@@ -54,6 +63,8 @@ exports.handler = (event, context, callback) =>{
             body: JSON.stringify(error)
         }
     })
+    
+    
 }
 
 
