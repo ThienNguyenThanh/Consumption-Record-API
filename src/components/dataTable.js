@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef} from 'react';
+import { useState, useRef} from 'react';
 
 
 
@@ -177,15 +177,6 @@ function DataTable() {
     }
   }
 
-  function createConsump() {
-    console.log('run new create')
-    // return fetch('http://localhost:9000/consump-create', {
-    //   body: JSON.stringify(data),
-    //   method: 'POST'
-    // }).then(response => {
-    //   return response.json()
-    // })
-  }
 
   return(
     <>
