@@ -162,7 +162,7 @@ function DataTable() {
       // console.log(consumption)
       if(consumption.after){
         // console.log(`After value: ${consumption.after}`)
-        nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
+        nextConsump.current = [consumption.data[2][0], consumption.data[2][5]["@ref"]["id"]]
       }
       
       setConsump(consumption.data)
