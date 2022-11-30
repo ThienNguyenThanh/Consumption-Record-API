@@ -87,7 +87,7 @@ function DataTable() {
       
       if(consumption.before){
         // console.log(`After value: ${consumption.after}`)
-        prevConsump.current = [consumption.before[0], consumption.before[1]["@ref"]["id"]]
+        prevConsump.current = [consumption.data[0][0], consumption.data[0][5]["@ref"]["id"]]
       }else{
         prevConsump.current = []
       }
@@ -124,14 +124,14 @@ function DataTable() {
       // console.log(consumption)
       if(consumption.after){
         // console.log(`After value: ${consumption.after}`)
-        nextConsump.current = [consumption.after[0], consumption.after[1]["@ref"]["id"]]
+        nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
       }else{
         nextConsump.current = []
       }
 
       if(consumption.before){
         // console.log(`After value: ${consumption.after}`)
-        prevConsump.current = [consumption.before[0], consumption.before[5]["@ref"]["id"]]
+        prevConsump.current = [consumption.data[0][0], consumption.data[0][5]["@ref"]["id"]]
       }else{
         prevConsump.current = []
       }
@@ -162,7 +162,7 @@ function DataTable() {
       // console.log(consumption)
       if(consumption.after){
         // console.log(`After value: ${consumption.after}`)
-        nextConsump.current = [consumption.data[2][0], consumption.data[2][5]["@ref"]["id"]]
+        nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
       }
       
       setConsump(consumption.data)
@@ -172,8 +172,8 @@ function DataTable() {
       setErr(err.message)
     }finally{
       setIsLoading(false)
-      // console.log(`Invoked fetch method`)
-      // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
+      console.log(`Invoked fetch method`)
+      console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
     }
   }
 
@@ -181,8 +181,8 @@ function DataTable() {
   return(
     <>
     <button onClick={getAllConsump}>Fetch</button>
-    <button onClick={getPrevConump}>Prev</button>
-    <button onClick={getNextConump}>After</button>
+    {prevConsump.current.length !== 0 && <button onClick={getPrevConump}>Prev</button> }
+    {nextConsump.current.length !== 0 && <button onClick={getNextConump}>After</button>}
 
     <form class="consumption-form">
       <table class="table table-bordered">
