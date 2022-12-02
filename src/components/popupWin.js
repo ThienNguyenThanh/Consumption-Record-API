@@ -1,44 +1,53 @@
 import './popupWin.css'
-import {useState, useRef} from 'react'
-import {Container ,Form} from 'semantic-ui-react'
+import {useState} from 'react'
+import {Checkbox, Container ,Form} from 'semantic-ui-react'
 import { TextField } from './textField';
+import { useNavigate } from 'react-router-dom';
+// import DataTable from './components/dataTable';
 
 const mockSave = val =>
   new Promise(resolve => setTimeout(() => resolve(val), 1000));
 
 export default function PopUpWinodw(){
-    const [isModalOpen, setIsModelOpen] = useState(true)
-    const [isOverlay, setIsOverlay] = useState(true)
     const [otherMonth, setOtherMonth] = useState(false)
     const currentMonth = new Date().getMonth() + 1
     const currentYear = new Date().getFullYear()
-
-
-    function unOverlay(){
-        setIsModelOpen(false)
-        setIsOverlay(false)
-    }
+    const navigate = useNavigate();
 
     return (
         <>
-        <div className={`my-modal ${isModalOpen ? "active" : ""}`} id="modal">
+       <div className={"my-modal active"} id="modal">
             <div className="modal-body">
-            <Container style={{ paddingTop: 16 }}>
+            <Container>
                 <Form>
-                <TextField
-                    width={8}
-                    icon="chess icon"
-                    label="Username"
-                    placeholder="John Doe"
-                    onSave={mockSave}
-                />
+                    <Form.Group widths='equal'>
+                        <TextField
+                            width={8}
+                            
+                            placeholder="Số Mới"
+                            onSave={mockSave}
+                        />
+                        <Checkbox label='Click me'/>
+                        <TextField
+                            width={8}
+                            
+                            placeholder="Số Mới"
+                            onSave={mockSave}
+                        />
+                        <Checkbox label='Click me'/>
+                    </Form.Group>
+                    
+                
                 </Form>
+                
+                
             </Container>
 
                 {!otherMonth && <div className="this-month">
                     <span>Bạn sẽ nhập điện nước cho tháng {currentMonth},{currentYear} ?</span>
                     <button type="button" className="btn btn-fail" onClick={() => {setOtherMonth(true)}}>Nope</button>
-                    <button type="button" className="btn btn-success" onClick={unOverlay}>Đúng rồi</button>
+                    <button type="button" className="btn btn-success" onClick={() => navigate('/consumptions')}>Đúng rồi</button>
+                
                 </div>}
                 
                 {otherMonth && <div className="other-month">
@@ -59,14 +68,18 @@ export default function PopUpWinodw(){
                           <option value="11">11</option>
                           <option value="12">12</option>
                         </select>
-                        <button type='button' className="btn btn-primary" onClick={unOverlay}>Xác nhận</button>
+                        <button type='button' className="btn btn-primary" onClick={() => navigate('/consumptions')}>Xác nhận</button>
                       </form>
                 </div>}
                 
             </div>
     
         </div>
-        <div  className={`overlay ${isOverlay ? "active" : ""}`}></div>
+        <div  className={"overlay active"}></div>
+        
+
+
+
         </>
     )
 }

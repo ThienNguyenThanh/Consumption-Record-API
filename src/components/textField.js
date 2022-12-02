@@ -10,7 +10,7 @@ export const TextField = ({
     ...props
   }) => {
     const [saving, setSaving] = useState(false);
-      const [lastValue, setLastValue] = useState(value || "");
+    const [lastValue, setLastValue] = useState(value || "");
   
     // 1. We introduce some new state to keep track of
     const [saved, setSaved] = useState(false);
@@ -39,18 +39,30 @@ export const TextField = ({
           }}
           onBlur={async e => {
             const val = e.target.value;
-            if (val !== lastValue) {
-              setSaving(true);
-              try {
-                onSave && (await onSave(val));
+            // console.log(val)
+            // console.log(lastValue)
+            
+            if(!isNaN(val) && !isNaN(val - 0)){
+              if (val !== lastValue) {
+                setSaving(true);
+                try {
+                  onSave && (await onSave(val));
+                  setSaved(true);
+                  setSaving(false);
+                  setLastValue(val);
+                  setSaveError(null);
+                } catch (err) {
+                  // 6. let's save the error so we can let the user know a save failed
+                  setSaveError("Something wrongs while saving new input!");
+                }
+              }else{
                 setSaved(true);
-                setSaving(false);
-                setLastValue(val);
-              } catch (err) {
-                // 6. let's save the error so we can let the user know a save failed
-                setSaveError("Error Message");
+                setSaveError(null);
               }
+            }else{
+              setSaveError("Input should be a number!");
             }
+            
           }}
           {...props}
         />
