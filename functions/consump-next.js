@@ -1,6 +1,6 @@
 const faunadb = require('faunadb')
 const Busboy = require('busboy')
-// require('dotenv').config({ path: '/Users/thien/Desktop/Consumption-Record-API/.env.local' })
+require('dotenv').config()
 const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 
 const {

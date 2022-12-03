@@ -5,7 +5,7 @@
 // require('dotenv').config()
 
 const faunadb = require('faunadb')
-// require('dotenv').config({ path: '/Users/thien/Desktop/Consumption-Record-API/.env.local' })
+// require('dotenv').config()
 const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 
 // const router = express.Router()
@@ -19,61 +19,60 @@ const {
     
 } = faunadb.query
 
-// router.get('/', async (req, res) => {
-//     const doc = await client.query(
-//         Paginate(  
-//             Match(Index("monthly-consumptions"), ["9","2022"])
-//         )
-        
-//     )
-//     res.send(doc.data)
-// })
 
-// app.use(cors())
-// app.use('/.netlify/functions/consump-read-all', router)
-
-// // module.exports = app
-// module.exports.handler = serverless(app)
 exports.handler = (event, context, callback) =>{
     // console.log("Funtion consumpt-read-all invoked")
-    const current_consump = event.body
-    console.log(current_consump)
-    return client.query(
+    const reqMonth = event.queryStringParameters.month
+    const reqYear = event.queryStringParameters.year
+    const pageNum = event.queryStringParameters.pageNumber
     
-        Paginate(  
-                Match(Index("monthly-consumptions"), ["10","2022"]),
-                {   
-                    size: 3
-                    
-                }
-        )
-    ).then((response) => {
-        return  {
+    if(event.httpMethod == 'POST'){
+        const current_consump = JSON.parse(event.body)
+        let paginOptions = {size: 3}
+        if(pageNum > 1){
+            paginOptions = {
+                size: 3,
+                after: [current_consump.afterData[0], Ref(Collection('Consumption'), current_consump.afterData[1])]
+            }
+        }
+    
+        return client.query(
+                            Paginate(
+                                Match(Index("monthly-consumptions"), [reqMonth,reqYear]),paginOptions
+                            ))
+                            .then((response) => {
+                                return  {
+                                    statusCode: 200,
+                                    headers:{
+                                        'Access-Control-Allow-Origin': '*',
+                                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+                                        'Access-Control-Allow-Methods': "*"
+                                    },
+                                    body: JSON.stringify(response)
+                                }
+                            }).catch((error) => {
+                                console.log(`Error: ${error}`)
+                                return {
+                                    statusCode: 400,
+                                    body: JSON.stringify(error)
+                                }
+                            })
+    }
+        
+    
+    if(event.httpMethod == 'OPTIONS'){
+        return callback(null,{
             statusCode: 200,
             headers:{
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-            },
-            body: JSON.stringify(response)
-        }
-    }).catch((error) => {
-        console.log(`Error: ${error}`)
-        return {
-            statusCode: 400,
-            body: JSON.stringify(error)
-        }
-    })
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+                    'Access-Control-Allow-Methods': "*"
+                },
+            body: JSON.stringify({message: 'Prefight successfully called'})
+        })
+    }
+    
     
     
 }
 
-
-
-// export const handler = async () => {
-//     return {
-//       statusCode: 200,
-//       body: JSON.stringify({
-//         message: 'Hello World!',
-//       }),
-//     }
-//   }

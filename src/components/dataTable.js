@@ -1,6 +1,4 @@
-import { useState, useRef} from 'react';
-
-
+import { useState, useRef, useEffect, useCallback} from 'react';
 
 function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
   return(
@@ -44,30 +42,36 @@ function DataRow({roomId, oldElec, oldElec0, oldWater, oldWater0}) {
   );
 }
 
-function DataTable() {
+function DataTable({inputMonth, inputYear}) {
   const [consump, setConsump] = useState([])
+  const [pageNumber, setPageNumber] = useState(1)
   const nextConsump = useRef([])
-  const prevConsump  = useRef([])
-  const currentPage = useRef(0)
-  const [isLoading, setIsLoading] = useState(false)
-  const [err, setErr] = useState('')
-  
+  const [isLoading, setIsLoading] = useState(true)
+  const [err, setErr] = useState(false)
+  const [hasMore, setHasMore] = useState(false)
 
-  // useEffect(() =>  {
-  //   //  fetch('/.netlify/functions/consump-read-all')
-  //     fetch('http://localhost:9000/consump-read-all')
-  //     .then(response => response.json())
-  //     .then(result => setConsump(result.data)) 
-  // },[])
+  const observer = useRef();
+  const lastConsumpRef = useCallback(node =>{
+    if(isLoading) return
+    if(observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries =>{
+      if(entries[0].isIntersecting && hasMore){
+        setPageNumber(prevPageNumber => prevPageNumber + 1)
+      }
+    })
 
-  async function getNextConump(){
-    if(consump.length === 0){
-      setIsLoading(true)
-    }
-    
+    if(node) observer.current.observe(node)
+    // console.log(node)
+  }, [isLoading, hasMore])
+
+
+  useEffect(() =>{
+    setIsLoading(true)
+    setErr(false)
+
     try{
       setErr('')
-      const res = await fetch('/.netlify/functions/consump-next', {
+      fetch(`/.netlify/functions/consump-read-all?month=${inputMonth}&year=${inputYear}&pageNumber=${pageNumber}`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,115 +79,31 @@ function DataTable() {
         },
         body: JSON.stringify({afterData: nextConsump.current})
       })
-
-      const consumption = await res.json();
-      // console.log(consumption)
-      if(consumption.after){
-        // console.log(`After value: ${consumption.after}`)
-        nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
-      }else{
-        nextConsump.current = []
-      }
-
-      
-      if(consumption.before){
-        // console.log(`After value: ${consumption.after}`)
-        prevConsump.current = [consumption.data[0][0], consumption.data[0][5]["@ref"]["id"]]
-      }else{
-        prevConsump.current = []
-      }
-      setConsump(consumption.data)
-      currentPage.current += 1
-    }
-    catch(err){
-      setErr(err.message)
-    }finally{
-      setIsLoading(false)
-    //   console.log(`Invoked next method`)
-    // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
-    }
-  }
-
-  async function getPrevConump(){
-    
-    if(consump.length === 0){
-      setIsLoading(true)
-    }
-    
-    try{
-      setErr('')
-      const res = await fetch('/.netlify/functions/consump-prev', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Request-Headers': "Origin"
-        },
-        body: JSON.stringify({prevData: prevConsump.current})
+      .then(res => res.json())
+      .then(consumption => {
+        if(consumption.after){
+          // console.log(`After value: ${consumption.after}`)
+          nextConsump.current = [consumption.data[2][0], consumption.data[2][5]["@ref"]["id"]]
+          setHasMore(true)
+        }else{
+          setHasMore(false)
+        }
+        setIsLoading(false)
+        // setConsump(consumption.data)
+        setConsump([...consump, ...consumption.data])
+        // console.log(consumption)
       })
-
-      const consumption = await res.json();
-      // console.log(consumption)
-      if(consumption.after){
-        // console.log(`After value: ${consumption.after}`)
-        nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
-      }else{
-        nextConsump.current = []
-      }
-
-      if(consumption.before){
-        // console.log(`After value: ${consumption.after}`)
-        prevConsump.current = [consumption.data[0][0], consumption.data[0][5]["@ref"]["id"]]
-      }else{
-        prevConsump.current = []
-      }
-      setConsump(consumption.data)
-      currentPage.current -=1
-    }
-    catch(err){
-      setErr(err.message)
-    }finally{
-      setIsLoading(false)
-      // console.log(`Invoked prev method`)
-      // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
-    }
-  }
-
-
-  async function getAllConsump(){
-    if(consump.length === 0){
-      setIsLoading(true)
-    }
-    
-    try{
-      setErr('')
-      const res = await fetch('/.netlify/functions/consump-read-all')
-
-      const consumption = await res.json();
-      
-      // console.log(consumption)
-      if(consumption.after){
-        // console.log(`After value: ${consumption.after}`)
-        nextConsump.current = [consumption.data[1][0], consumption.data[1][5]["@ref"]["id"]]
-      }
-      
-      setConsump(consumption.data)
-      currentPage.current = 1
       
     }
     catch(err){
       setErr(err.message)
-    }finally{
-      setIsLoading(false)
-      // console.log(`Invoked fetch method`)
-      // console.log(`Current prev: ${prevConsump.current} & Current next: ${nextConsump.current}`)
     }
-  }
+  }, [pageNumber, inputMonth, inputYear]);
+
 
 
   return(
     <>
-    <button onClick={getAllConsump}>Fetch</button>
-
     <form class="consumption-form">
       <table class="table table-bordered">
         <thead id="table-header" class="thead-dark" >
@@ -196,21 +116,35 @@ function DataTable() {
           </tr>
         </thead>
         <tbody class="table-content">
-          {err && <h2>{err}</h2>}
-          {isLoading && <h2>Loading...</h2>}
-          {consump.map(consum => (
-            <DataRow key={consum[0]} roomId={consum[0]} oldElec={consum[1]} oldElec0={consum[2]} oldWater={consum[3]} oldWater0={consum[4]} />
-          ))}
           
+          
+          {consump.map((consum, index) => {
+            if(index % 3 === 2){
+              console.log('ref');
+              return <div ref={lastConsumpRef}>
+                        <DataRow  key={consum[0]} roomId={consum[0]} oldElec={consum[1]} oldElec0={consum[2]} oldWater={consum[3]} oldWater0={consum[4]} />
+                    </div> 
+            }else{
+              return <div>
+               <DataRow key={consum[0]} roomId={consum[0]} oldElec={consum[1]} oldElec0={consum[2]} oldWater={consum[3]} oldWater0={consum[4]} />
+
+              </div>
+            }
+          })}
+          {err && <h2>{err}</h2>}
+          <h2>{isLoading && "Loading ..."}</h2>
         </tbody>
     </table>
     
     </form>
-    {prevConsump.current.length !== 0 && <button onClick={getPrevConump}>Prev</button> }
+    {/* {prevConsump.current.length !== 0 && <button onClick={getPrevConump}>Prev</button> }
     {currentPage.current !== 0 && <h5>Page {currentPage.current}</h5>}
-    {nextConsump.current.length !== 0 && <button onClick={getNextConump}>After</button>}
+    {nextConsump.current.length !== 0 && <button onClick={getNextConump}>After</button>} */}
+     
     
+   
     
+
     </> 
   )
 }
