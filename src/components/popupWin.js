@@ -2,7 +2,6 @@ import './popupWin.css'
 import {useState} from 'react'
 import {Checkbox, Container ,Form} from 'semantic-ui-react'
 import { TextField } from './textField';
-import { useNavigate } from 'react-router-dom';
 import DataTable from './dataTable';
 
 const mockSave = val =>
@@ -14,21 +13,12 @@ export default function PopUpWinodw(){
     const [otherMonth, setOtherMonth] = useState(false)
     const currentMonth = new Date().getMonth() + 1
     const currentYear = new Date().getFullYear()
-    const navigate = useNavigate();
 
 
     function unOverlay(){
         setIsModelOpen(false)
         setIsOverlay(false)
     }
-
-    function handleConsumptionSearch(){
-
-        DataTable("9","2022")
-    }
-
-    
-
     return (
         <>
        <div className={`my-modal ${isModalOpen ? "active" : ""}`} id="modal">

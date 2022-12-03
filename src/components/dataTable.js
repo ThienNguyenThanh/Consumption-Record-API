@@ -90,7 +90,9 @@ function DataTable({inputMonth, inputYear}) {
         }
         setIsLoading(false)
         // setConsump(consumption.data)
-        setConsump([...consump, ...consumption.data])
+        setConsump(prevConsump => {
+          return [...prevConsump, ...consumption.data]
+        })
         // console.log(consumption)
       })
       
